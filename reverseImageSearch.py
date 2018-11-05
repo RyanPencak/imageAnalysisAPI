@@ -1,7 +1,7 @@
 import requests
 from googlesearch import search
 
-filePath = './sample.jpeg'
+filePath = './static/img/testImg.jpg'
 searchUrl = 'http://www.google.hr/searchbyimage/upload'
 multipart = {'encoded_image': (filePath, open(filePath, 'rb')), 'image_content': ''}
 response = requests.post(searchUrl, files=multipart, allow_redirects=False)
