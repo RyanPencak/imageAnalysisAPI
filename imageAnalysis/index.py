@@ -5,8 +5,8 @@ from http.cookiejar import CookieJar
 from PIL import Image, ImageChops
 import requests
 import re
-# import shutil
 import os
+# import shutil
 
 app = Flask(__name__)
 
@@ -14,10 +14,6 @@ photos = UploadSet('photos', IMAGES)
 
 app.config['UPLOADED_PHOTOS_DEST'] = 'static/img'
 configure_uploads(app, photos)
-
-@app.route('/')
-def hello():
-    return "hello\n"
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -32,10 +28,8 @@ def upload():
 
 @app.route('/getelaoutput', methods=['GET'])
 def getELA():
-    ela_path = '../static/img/output.jpg'
-
-    # if os.path.exists(ela_path):
-    return (send_file('../static/img/output.jpg', mimetype='image/jpg'))
+    if os.path.exists('../static/img/output.jpg'):
+        return (send_file('../static/img/output.jpg', mimetype='image/jpg'))
         # return send_file(io.BytesIO(ela_path.read()),
         #              attachment_filename='output.jpg',
         #              mimetype='image/jpg')
@@ -79,14 +73,14 @@ def ELA():
             os.remove(ORIG)
         if os.path.exists(TEMP):
             os.remove(TEMP)
-        if os.path.exists('./static/img/output.jpg'):
-            os.remove('./static/img/output.jpg')
+        if os.path.exists('./imageAnalysis/img/output.jpg'):
+            os.remove('./imageAnalysis/img/output.jpg')
 
         # shutil.rmtree('static/img')
         filename = photos.save(request.files['queryImg'], folder=None, name='elaImg.jpg')
 
         original = Image.open(ORIG)
-        original.save(TEMP, quality=70)
+        original.save(TEMP, quality=75)
         temporary = Image.open(TEMP)
 
         diff = ImageChops.difference(original, temporary)
@@ -96,10 +90,10 @@ def ELA():
             for y in range(HEIGHT):
                 d[x, y] = tuple(k * SCALE for k in d[x, y])
 
-        diff.save('./static/img/output.jpg')
-        # diff.show()
+        diff.save('./imageAnalysis/img/output.jpg')
+        diff.show()
 
-        im = Image.open('./static/img/output.jpg').convert('L')
+        im = Image.open('./imageAnalysis/img/output.jpg').convert('L')
         pixels = im.getdata()
 
         # 0 (pitch black) and 255 (bright white)
@@ -111,4 +105,5 @@ def ELA():
             if pixel < black_thresh:
                 nblack += 1
 
-        return ("Pixel Change Percentage: {0:.2f}%".format((pixels_length - nblack) / pixels_length * 100))
+        return (send_file('img/output.jpg', mimetype='image/jpg'))
+        # return ("Pixel Change Percentage: {0:.2f}%".format((pixels_length - nblack) / pixels_length * 100))
