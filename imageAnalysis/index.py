@@ -91,19 +91,34 @@ def ELA():
                 d[x, y] = tuple(k * SCALE for k in d[x, y])
 
         diff.save('./imageAnalysis/img/output.jpg')
-        diff.show()
+        return (send_file('img/output.jpg', mimetype='image/jpg'))
 
-        im = Image.open('./imageAnalysis/img/output.jpg').convert('L')
-        pixels = im.getdata()
+    return 'ERROR'
+
+        # diff.save('./imageAnalysis/img/output.jpg')
+        # diff.show()
+
+        # im = Image.open('./imageAnalysis/img/output.jpg').convert('L')
+        # pixels = im.getdata()
 
         # 0 (pitch black) and 255 (bright white)
-        black_thresh = 30
-        pixels_length = len(pixels)
-        nblack = 0
+        # black_thresh = 30
+        # pixels_length = len(pixels)
+        # nblack = 0
 
-        for pixel in pixels:
-            if pixel < black_thresh:
-                nblack += 1
+        # for pixel in pixels:
+        #     if pixel < black_thresh:
+        #         nblack += 1
 
-        return (send_file('img/output.jpg', mimetype='image/jpg'))
+        # response = send_from_directory(directory='img', filename='output.jpg')
+        # response.headers['Content-Type'] = 'image/jpg'
+        # return response
+
+        # with open("imageAnalysis/img/output.jpg", "rb") as imageFile:
+        #   f = imageFile.read()
+        #   b = bytearray(f)
+        # return b
+
+        # return (send_file('img/output.jpg', mimetype='image/jpg'))
+
         # return ("Pixel Change Percentage: {0:.2f}%".format((pixels_length - nblack) / pixels_length * 100))
